@@ -8,7 +8,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
-import bcrypt from 'bcryptjs';
 
 
 const Registration = () => {
@@ -46,23 +45,17 @@ const Registration = () => {
     }
     
     const addUserToDb = async () => {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
-        axios.post('http://localhost:8000/api/v1/users/register',
+        axios.post('http://localhost:8000/api/v1/users/signup',
             {
                 login: `${login}`,
-                password: `${hash}`
+                password: `${password}`
             })
             .then(() => {
                 dispatch({ type: 'SET_LOGINED' });
                 navigate('/');
             })
             .catch((err) => {
-                if (err.response.data.message) {
-                    console.log("Seems like you have already registered!");
-                } else {
-                    console.log('Unknown error!');
-                }
+                console.log(err);
             });
     }
    
